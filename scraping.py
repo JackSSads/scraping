@@ -74,10 +74,10 @@ with sync_playwright() as play:
     list_name = []
     list_price = []
 
-    for produto in html_content.find_all('div', attrs=produtcts_all):
+    for products in html_content.find_all('div', attrs=produtcts_all):
 
-        product_name = produto.find('h2', attrs=name).get_text()
-        product_price = produto.select_one('p', attrs=price).get_text()
+        product_name = products.find('h2', attrs=name).get_text()
+        product_price = products.select_one('p', attrs=price).get_text()
 
         list_name.append(product_name.split('|')[0])
 
