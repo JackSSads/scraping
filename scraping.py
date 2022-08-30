@@ -21,8 +21,8 @@ with sync_playwright() as play:
     time.sleep(2)
 
     # Login
-    email = 'fotosjackson2018@hotmail.com'
-    password = 'Evolution2011*'
+    email = 'seu@email.com'
+    password = 'suasenha123'
 
     page.fill('xpath=//*[@id="email"]',
               email)
