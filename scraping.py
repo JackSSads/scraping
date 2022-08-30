@@ -13,6 +13,7 @@ with sync_playwright() as play:
     try:
         page.goto(
             'https://www.livrariasfamiliacrista.com.br/customer/account/login')
+        print('Entrou no site...')
     except HTTPError as erro:
         print('Erro de requisição HTTP: ' + erro.status, erro.reason)
     except URLError as erro:
@@ -24,17 +25,31 @@ with sync_playwright() as play:
     email = 'seu@email.com'
     password = 'suasenha123'
 
-    page.fill('xpath=//*[@id="email"]',
+    try:
+        page.fill('xpath=//*[@id="email"]',
               email)
-    page.fill('xpath=//*[@id="pass"]',
+        page.fill('xpath=//*[@id="pass"]',
               password)
-    page.locator('xpath=//*[@id="send2"]').click()
+        page.locator('xpath=//*[@id="send2"]').click()
+
+        print('Login realizado...')
+
+    except HTTPError as erro:
+        print('Erro de requisição HTTP: ' + erro.status, erro.reason)
+    except URLError as erro:
+        print('Erro ao acessar a URL: ' + erro.reason)
+
 
     # Pesquisando produto
-    product = 'Harpa'  # produto a ser pesquisado
-    page.fill('xpath=//*[@id="search"]', product)
-    page.locator(
-        'xpath=//*[@id="search_mini_form"]/div[1]/button').click()
+    try:
+        product = 'biblia'  # produto a ser pesquisado
+        page.fill('xpath=//*[@id="search"]', product)
+        page.locator(
+            'xpath=//*[@id="search_mini_form"]/div[1]/button').click()
+
+        print('Produto buscado: ' + product)
+    except:
+        print('O produto não pode ser buscado :(')
 
     time.sleep(2)
 
@@ -65,7 +80,11 @@ with sync_playwright() as play:
         product_price = produto.select_one('p', attrs=price).get_text()
 
         list_name.append(product_name.split('|')[0])
-        list_price.append(product_price.split('$')[1].split(':8'))
+
+        if product_price != 'Indisponível':
+            list_price.append(product_price.split('$')[1].strip())
+        else:
+            list_price.append(product_price)
 
     # tratando resultados
 
@@ -80,5 +99,4 @@ with sync_playwright() as play:
 
     print(json)
 
-    time.sleep(5)
     browser.close()
